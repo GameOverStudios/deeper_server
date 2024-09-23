@@ -1,0 +1,9 @@
+Vou garantir que os próximos contexts:
+Sigam as convenções de nomenclatura do Elixir: Nomes de variáveis e funções em minúsculas, com snake_case.
+Utilizem os aliases corretos para os schemas: alias DeeperServer.UnaCms.Schemas.NomeDoSchema.
+Importem Ecto.Query: import Ecto.Query para utilizar as macros de consulta do Ecto.
+Utilizem os parênteses em from: from(m in Schema, where: ...)
+Passem consultas para Repo.delete_all: Repo.delete_all(from(m in Schema, where: ...)).
+Utilizem nomes de campos em minúsculas: field :nome_do_campo, :tipo.
+Removam a definição manual do campo :id: O Ecto gerencia a chave primária automaticamente.
+Corrijam as funções cast e validate_required: Para refletir os nomes de campos corrigidos.
