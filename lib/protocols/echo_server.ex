@@ -3,28 +3,24 @@ defmodule ElixirRanch.Protocols.EchoServer do
   require Logger
 
   @behaviour :ranch_protocol
-  @timeout 5000
+  @default_timeout 5000
 
-  def start_link(ref, transport, _opts) do
-    opts = [
-      :link,
-      :monitor,
-      {:priority, :high},
-      {:fullsweep_after, 10},
-      {:min_heap_size, 512},
-      {:min_bin_vheap_size, 2048},
-      {:max_heap_size, %{size: 10000, kill: true, error_logger: false}},
-      {:message_queue_data, :off_heap}
-    ]
+  def start_link(ref, transport, opts \\ []) do
+    # Carrega as configurações do arquivo config.exs
+    server_opts = Application.get_env(:elixir_ranch, __MODULE__)[:server_opts] || []
+    timeout = Keyword.get(opts, :timeout, @default_timeout)
+
     Logger.debug("Iniciando EchoServer com referência: #{inspect(ref)}")
-    {:ok, :proc_lib.spawn_link(__MODULE__, :init, [{ref, transport, opts}])}
+    {:ok, :proc_lib.spawn_link(__MODULE__, :init, [{ref, transport, server_opts, timeout}])}
   end
 
-  def init({ref, transport, _opts}) do
+  def init({ref, transport, server_opts, timeout}) do
     {:ok, socket} = :ranch.handshake(ref)
     :ok = transport.setopts(socket, active: :once)
     Logger.debug("Conexão estabelecida com socket: #{inspect(socket)}")
-    :gen_server.enter_loop(__MODULE__, [], {socket, transport}, @timeout)
+
+    # Entra no loop do GenServer com o timeout e as configurações do servidor
+    :gen_server.enter_loop(__MODULE__, [], {socket, transport}, timeout)
   end
 
   def handle_info({:tcp, socket, data}, {socket, transport} = state) do
@@ -32,7 +28,7 @@ defmodule ElixirRanch.Protocols.EchoServer do
     :ok = transport.send(socket, data)
     Logger.debug("Dados enviados de volta via TCP: #{inspect(data)}")
     :ok = transport.setopts(socket, active: :once)
-    {:noreply, state, @timeout}
+    {:noreply, state, @default_timeout}
   end
 
   def handle_info({:ssl, socket, data}, {socket, transport} = state) do
@@ -40,7 +36,7 @@ defmodule ElixirRanch.Protocols.EchoServer do
     :ok = transport.send(socket, data)
     Logger.debug("Dados enviados de volta via SSL: #{inspect(data)}")
     :ok = transport.setopts(socket, active: :once)
-    {:noreply, state, @timeout}
+    {:noreply, state, @default_timeout}
   end
 
   def handle_info({:tcp_closed, socket}, {socket, _} = state) do
