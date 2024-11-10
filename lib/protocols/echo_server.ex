@@ -6,7 +6,6 @@ defmodule ElixirRanch.Protocols.EchoServer do
   @default_timeout 5000
 
   def start_link(ref, transport, opts \\ []) do
-    # Carrega as configurações do arquivo config.exs
     server_opts = Application.get_env(:elixir_ranch, __MODULE__)[:server_opts] || []
     timeout = Keyword.get(opts, :timeout, @default_timeout)
 
@@ -14,7 +13,7 @@ defmodule ElixirRanch.Protocols.EchoServer do
     {:ok, :proc_lib.spawn_link(__MODULE__, :init, [{ref, transport, server_opts, timeout}])}
   end
 
-  def init({ref, transport, server_opts, timeout}) do
+  def init({ref, transport, _server_opts, timeout}) do
     {:ok, socket} = :ranch.handshake(ref)
     :ok = transport.setopts(socket, active: :once)
     Logger.debug("Conexão estabelecida com socket: #{inspect(socket)}")

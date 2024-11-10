@@ -1,0 +1,108 @@
+import Config
+
+config :elixir_ranch, ElixirRanch.Protocols.EchoServer,
+  option: [
+    {:active, false},                          # Modo de recebimento de mensagens (`true`, `false`, `:once` ou -32768..32767)
+    {:buffer, 4096},                           # Tamanho do buffer em bytes (default: 4096)
+    {:debug, false},                           # Ativa ou desativa o modo de depuração (default: `false`)
+    {:delay_send, true},                       # Controla envio de pacotes TCP (default: `true`, com Nagle's Algorithm ativo)
+    {:deliver, :term},                         # Formato das mensagens de recebimento (`:port` ou `:term`, default: `:term`)
+    {:dontroute, false},                       # Desativa o roteamento se `true` (default: `false`)
+    {:exit_on_close, true},                    # Define saída do processo ao fechar a conexão (default: `true`)
+    {:header, 0},                              # Tamanho do cabeçalho (default: `0`)
+    {:high_msgq_watermark, 512},               # Limite superior da fila de mensagens (default: `512`)
+    {:high_watermark, 1024},                   # Limite superior de dados para bloquear envio (default: `1024`)
+    {:keepalive, true},                        # Manter a conexão ativa com keepalive (default: `true`)
+    {:linger, {false, 0}},                     # Configuração de linger: espera por dados pendentes ao fechar (default: `{false, 0}`)
+    {:low_msgq_watermark, 128},                # Limite inferior para desbloquear a transmissão (default: `128`)
+    {:low_watermark, 512},                     # Limite inferior para reiniciar o envio após bloqueio (default: `512`)
+    {:mode, :binary},                          # Formato dos dados (`:list` ou `:binary`, default: `:binary`)
+    {:nodelay, true},                          # Envio imediato de pacotes pequenos (default: `true`)
+    {:packet, 0},                              # Tipo de pacote (`0` sem pacote, `:http`, etc., default: `0`)
+    {:packet_size, 65535},                     # Tamanho máximo de um pacote (default: `65535`)
+    {:priority, 0},                            # Prioridade de agendamento do processo (default: `0`)
+    {:raw, {1, 2, <<0>>}},                     # Opções de protocolo com valores brutos (default: `{1, 2, <<0>>}`)
+    {:recbuf, 4096},                           # Tamanho do buffer de recebimento (default: `4096`)
+    {:reuseaddr, true},                        # Permite reutilização do endereço (default: `true`)
+    {:send_timeout, :infinity},                # Limite de tempo de envio (`:infinity` por padrão)
+    {:send_timeout_close, false},              # Fecha a conexão ao exceder tempo limite (default: `false`)
+    {:show_econnreset, true},                  # Exibe erro ao redefinir a conexão (default: `true`)
+    {:sndbuf, 4096},                           # Tamanho do buffer de envio (default: `4096`)
+    {:tos, 0},                                 # Tipo de serviço para pacotes IP (default: `0`)
+    {:tclass, 0},                              # Classe de tráfego IPv6 (default: `0`)
+    {:ttl, 64},                                # TTL para pacotes de rede (default: `64`)
+    {:recvtos, false},                         # Inclui tipo de serviço nos pacotes (default: `false`)
+    {:recvtclass, false},                      # Inclui classe de tráfego nos pacotes IPv6 (default: `false`)
+    {:recvttl, false},                         # Inclui TTL nos pacotes recebidos (default: `false`)
+    {:ipv6_v6only, false}                      # Limita a conexão ao IPv6 apenas (default: `false`)
+  ],
+
+  pktoptions: [
+    {:inet, :ancillary_data}   # :inet - Opções para sockets IPv4/IPv6, :ancillary_data - Dados auxiliares para informações adicionais
+  ],
+
+  option_name: [
+    {:active, false},               # Define se o socket está ativo para receber dados (padrão: inativo)
+    {:buffer, 4096},                # Tamanho do buffer para o socket (padrão: 4096 bytes)
+    {:debug, false},                # Ativa ou desativa informações de depuração (padrão: desativado)
+    {:delay_send, true},            # Controla se o envio deve ser retardado (padrão: habilitado)
+    {:deliver, :term},              # Define a política de entrega de mensagens (padrão: entrega como :term)
+    {:dontroute, false},            # Não roteia pacotes fora da rede local (padrão: desativado)
+    {:exit_on_close, true},         # Fecha o socket quando o processo termina (padrão: ativado)
+    {:header, 0},                   # Especifica o cabeçalho do pacote (padrão: sem cabeçalho)
+    {:high_msgq_watermark, 8192},   # Limite alto de mensagens em fila (padrão: 8192)
+    {:high_watermark, 8192},        # Limite alto para o buffer do socket (padrão: 8192 bytes)
+    {:keepalive, true},             # Mantém a conexão ativa periodicamente (padrão: habilitado)
+    {:linger, {true, 3000}},        # Tempo de espera ao fechar a conexão (padrão: habilitado, 3000ms)
+    {:low_msgq_watermark, 1024},    # Limite baixo de mensagens em fila (padrão: 1024)
+    {:low_watermark, 1024},         # Limite baixo para o buffer do socket (padrão: 1024 bytes)
+    {:mode, :binary},               # Define o modo de operação do socket (padrão: modo binário)
+    {:nodelay, true},               # Desabilita o Nagle's algorithm para envio imediato (padrão: habilitado)
+    {:packet, 0},                   # Especifica o tipo de pacote (padrão: sem empacotamento especial)
+    {:packet_size, 0},              # Tamanho máximo do pacote (padrão: ilimitado)
+    {:priority, :normal},           # Define a prioridade do socket (padrão: normal)
+    {:raw, [
+      {:Protocol, 0},               # Protocolo do socket (padrão: 0 para protocolos genéricos)
+      {:OptionNum, 0},              # Número da opção (padrão: 0 para opções padrão)
+      {:ValueSpec, :default}        # Valor genérico para a especificação (padrão: valor padrão)
+    ]},
+    {:recbuf, 4096},                # Tamanho do buffer de recebimento (padrão: 4096 bytes)
+    {:reuseaddr, true},             # Permite reuso do endereço (padrão: ativado)
+    {:send_timeout, 5000},          # Tempo limite para envio de dados (padrão: 5000ms)
+    {:send_timeout_close, true},    # Fecha o socket após tempo limite de envio (padrão: ativado)
+    {:show_econnreset, false},      # Mostra erro ECONNRESET (padrão: desativado)
+    {:sndbuf, 4096},                # Tamanho do buffer de envio (padrão: 4096 bytes)
+    {:tos, 0},                      # Tipo de serviço para o socket (padrão: 0)
+    {:tclass, 0},                   # Classe de tráfego para o socket (padrão: 0)
+    {:ttl, 64},                     # Tempo de vida (TTL) para pacotes (padrão: 64)
+    {:recvtos, false},              # Recebe informações de tipo de serviço (padrão: desativado)
+    {:recvtclass, false},           # Recebe informações de classe de tráfego (padrão: desativado)
+    {:recvttl, false},              # Recebe informações de tempo de vida (padrão: desativado)
+    {:pktoptions, :pktoptions_value}, # Opções específicas de pacotes (padrão: lista vazia)
+    {:ipv6_v6only, false}           # Define se o socket é somente IPv6 (padrão: falso para suporte dual-stack)
+  ],
+
+  connect_option: [
+    {:fd, nil},                    # File descriptor (fd), define o descritor do socket (padrão: nil)
+    {:address_family, :inet},      # Família de endereços, pode ser :inet (IPv4) ou :inet6 (IPv6) (padrão: :inet)
+    {:ifaddr, {127, 0, 0, 1}},     # Endereço do dispositivo de rede (padrão: loopback IPv4)
+    {:ip, {127, 0, 0, 1}},         # Endereço IP do socket (padrão: loopback IPv4)
+    {:port, 0},                    # Número da porta de conexão (padrão: 0, aleatório)
+    {:tcp_module, :gen_tcp},       # Módulo TCP a ser usado, define como o socket será tratado (padrão: :gen_tcp)
+    {:netns, nil},                 # Namespace de rede, define um namespace específico (padrão: nil)
+    {:bind_to_device, nil},        # Nome do dispositivo de rede para o bind (padrão: nil)
+    {:option, :default}            # Opção personalizada (padrão: :default, caso outras opções sejam definidas)
+  ],
+
+  listen_option: [
+    {:fd, nil},                     # File descriptor (fd), descreve o socket escutando (padrão: nil)
+    {:address_family, :inet},       # Família de endereços, pode ser :inet (IPv4) ou :inet6 (IPv6) (padrão: :inet)
+    {:ifaddr, {0, 0, 0, 0}},        # Endereço do dispositivo de rede para escutar (padrão: 0.0.0.0, todos os endereços)
+    {:ip, {0, 0, 0, 0}},            # Endereço IP para escutar (padrão: 0.0.0.0, todos os endereços)
+    {:port, 80},                    # Número da porta para escutar (padrão: 80, porta HTTP padrão)
+    {:backlog, 1024},               # Tamanho da fila de conexões pendentes (padrão: 1024)
+    {:tcp_module, :gen_tcp},        # Módulo TCP para gerenciar conexões (padrão: :gen_tcp)
+    {:netns, nil},                  # Namespace de rede, especifica um namespace para a escuta (padrão: nil)
+    {:bind_to_device, nil},         # Nome do dispositivo de rede para associar (padrão: nil)
+    {:option, :default}             # Opção personalizada adicional (padrão: :default)
+  ]
